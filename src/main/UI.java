@@ -9,12 +9,11 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import main.model.NexusNetwork;
+import main.model.NexusParser;
+import main.view.Graph;
 
 import java.io.File;
 import java.util.List;
@@ -46,8 +45,15 @@ public class UI extends Application {
             if (list != null) {
                 //TODO: Multiple File handling
                 for (File file : list) {
-                    Network network = new Parser().parse(file);
-                    new Graph(network).drawOnPane(pane);
+                    try {
+                        NexusNetwork nexusNetwork = NexusParser.parseNetworkData(file);
+                        Graph g = new Graph(nexusNetwork);
+                        g.drawOnPane(pane);
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -65,7 +71,7 @@ public class UI extends Application {
 
         root.setTop(menuBar);
         root.setCenter(pane);
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
     }
 }
